@@ -13,7 +13,7 @@ public interface CandidateService {
 
 	public List<Candidate> getAllCandidates();
 
-	public void updateCandidate(Long id, Candidate candidate) throws CandidateNotFoundException;
+	public Candidate updateCandidate(Long id, Candidate candidate) throws CandidateNotFoundException;
 
 	public void deleteCandidate(Long id) throws CandidateNotFoundException;
 

@@ -32,11 +32,11 @@ public class CandidateServiceImpl implements CandidateService {
 	}
 
 	@Override
-	public void updateCandidate(Long id, Candidate candidate) throws CandidateNotFoundException {
+	public Candidate updateCandidate(Long id, Candidate candidate) throws CandidateNotFoundException {
 		if (!candidateRepository.existsById(id))
 			throw new CandidateNotFoundException("Candidate not found with id : " + id);
 		candidate.setId(id);
-		candidateRepository.save(candidate);
+		return candidateRepository.save(candidate);
 	}
 
 	@Override

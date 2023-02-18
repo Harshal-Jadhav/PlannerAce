@@ -23,11 +23,11 @@ public class Feedback {
 
 	@ManyToOne
 	@JoinColumn(name = "interviewer_id")
-	private User interviewer;
+	private Interviewer interviewer;
 
 	@ManyToOne
 	@JoinColumn(name = "candidate_id")
-	private User candidate;
+	private Candidate candidate;
 
 	private String comments;
 	private int rating;
