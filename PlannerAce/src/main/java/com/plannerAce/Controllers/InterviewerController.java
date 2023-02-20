@@ -24,7 +24,7 @@ public class InterviewerController {
 		this.interviewerService = interviewerService;
 	}
 
-	@PostMapping("/add")
+	@PostMapping("/add_interviewer")
 	public ResponseEntity<InterviewerResponse> registerInterviewer(@RequestBody InterviewerRequest interviewerRequest) {
 		ModelMapper mapper = new ModelMapper();
 		Interviewer interviewer = mapper.map(interviewerRequest, Interviewer.class);

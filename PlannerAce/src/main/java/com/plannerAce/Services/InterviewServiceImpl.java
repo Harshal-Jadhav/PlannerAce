@@ -54,7 +54,7 @@ public class InterviewServiceImpl implements InterviewService {
 
 	@Override
 	public List<Interview> getInterviewsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-		return interviewRepository.findByInterviewTimeBetween(startDate, endDate);
+		return interviewRepository.findByStartTimeBetween(startDate, endDate);
 	}
 
 	@Override
@@ -63,9 +63,9 @@ public class InterviewServiceImpl implements InterviewService {
 		LocalDateTime interviewEndTime = interview.getEndTime();
 
 		List<Interview> conflictingInterviews = interviewRepository
-				.findByInterviewerAndTimeRange(interview.getInterviewer(), interviewStartTime, interviewEndTime);
+				.findByInterviewerAndStartTimeBetween(interview.getInterviewer(), interviewStartTime, interviewEndTime);
 
-		conflictingInterviews.addAll(interviewRepository.findByCandidateAndTimeRange(interview.getCandidate(),
+		conflictingInterviews.addAll(interviewRepository.findByCandidateAndStartTimeBetween(interview.getCandidate(),
 				interviewStartTime, interviewEndTime));
 
 		if (conflictingInterviews.isEmpty())

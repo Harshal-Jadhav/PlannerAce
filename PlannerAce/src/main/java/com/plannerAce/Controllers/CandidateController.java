@@ -42,8 +42,8 @@ public class CandidateController {
 		return new ResponseEntity<CandidateResponse>(candidateResponse, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable("id") Long candidateId)
+	@GetMapping("/{candidate_id}")
+	public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable("candidate_id") Long candidateId)
 			throws CandidateNotFoundException {
 		Candidate candidate = candidateService.getCandidateById(candidateId);
 		ModelMapper mapper = new ModelMapper();

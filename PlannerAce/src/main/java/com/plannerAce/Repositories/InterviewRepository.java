@@ -16,12 +16,13 @@ public interface InterviewRepository extends JpaRepository<Interview, Long> {
 
 	List<Interview> findByInterviewer(Interviewer interviewer);
 
-	List<Interview> findByInterviewerAndTimeRange(Interviewer interviewer, LocalDateTime interviewStartTime,
+	List<Interview> findByInterviewerAndStartTimeBetween(Interviewer interviewer, LocalDateTime interviewStartTime,
 			LocalDateTime interviewEndTime);
 
-	Collection<? extends Interview> findByCandidateAndTimeRange(Candidate candidate, LocalDateTime interviewStartTime,
+	Collection<? extends Interview> findByCandidateAndStartTimeBetween(Candidate candidate,
+			LocalDateTime interviewStartTime,
 			LocalDateTime interviewEndTime);
 
-	List<Interview> findByInterviewTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
+	List<Interview> findByStartTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
 
 }
