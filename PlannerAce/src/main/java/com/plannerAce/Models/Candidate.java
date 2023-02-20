@@ -21,7 +21,9 @@ public class Candidate {
 	private Long id;
 	private String name;
 	private String email;
+	private String password;
 	private String phoneNumber;
+	private String resumeDriveLink;
 
 	@OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Interview> interviews = new ArrayList<>();

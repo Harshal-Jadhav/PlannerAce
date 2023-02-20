@@ -3,6 +3,7 @@ package com.plannerAce.Controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,8 @@ import com.plannerAce.Enums.InterviewStatus;
 import com.plannerAce.Exceptions.CandidateNotFoundException;
 import com.plannerAce.Models.Candidate;
 import com.plannerAce.Models.Interview;
+import com.plannerAce.Payload.Request.CandidateRequest;
+import com.plannerAce.Payload.Response.CandidateResponse;
 import com.plannerAce.Services.CandidateService;
 import com.plannerAce.Services.InterviewService;
 
@@ -30,24 +33,31 @@ public class CandidateController {
 		this.interviewService = interviewService;
 	}
 
-	@PostMapping("/")
-	public ResponseEntity<Candidate> registerNewCandidate(@RequestBody Candidate candidate) {
+	@PostMapping("/add")
+	public ResponseEntity<CandidateResponse> registerNewCandidate(@RequestBody CandidateRequest candidateRequest) {
+		ModelMapper mapper = new ModelMapper();
+		Candidate candidate = mapper.map(candidateRequest, Candidate.class);
 		Candidate newCandidate = candidateService.createCandidate(candidate);
-		return new ResponseEntity<Candidate>(newCandidate, HttpStatus.CREATED);
+		CandidateResponse candidateResponse = mapper.map(newCandidate, CandidateResponse.class);
+		return new ResponseEntity<CandidateResponse>(candidateResponse, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Candidate> getCandidateById(@PathVariable("id") Long candidateId)
+	public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable("id") Long candidateId)
 			throws CandidateNotFoundException {
 		Candidate candidate = candidateService.getCandidateById(candidateId);
-		return new ResponseEntity<Candidate>(candidate, HttpStatus.OK);
+		ModelMapper mapper = new ModelMapper();
+		CandidateResponse candidateResponse = mapper.map(candidate, CandidateResponse.class);
+		return new ResponseEntity<CandidateResponse>(candidateResponse, HttpStatus.OK);
 	}
 
 	@PutMapping("{id}")
-	public ResponseEntity<Candidate> updateCandidateProfile(@PathVariable("id") Long candidateId,
+	public ResponseEntity<CandidateResponse> updateCandidateProfile(@PathVariable("id") Long candidateId,
 			@RequestBody Candidate candidate) throws CandidateNotFoundException {
 		Candidate updatedCandidate = candidateService.updateCandidate(candidateId, candidate);
-		return new ResponseEntity<Candidate>(updatedCandidate, HttpStatus.OK);
+		ModelMapper mapper = new ModelMapper();
+		CandidateResponse candidateResponse = mapper.map(updatedCandidate, CandidateResponse.class);
+		return new ResponseEntity<CandidateResponse>(candidateResponse, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}/interviews/scheduled")
