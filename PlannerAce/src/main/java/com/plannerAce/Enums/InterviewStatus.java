@@ -1,5 +1,5 @@
 package com.plannerAce.Enums;
 
 public enum InterviewStatus {
-	SCHEDULED, COMPLETED, CANCELED
+	SCHEDULED, COMPLETED, CANCELLED
 }
