@@ -12,6 +12,7 @@ import com.plannerAce.Models.Candidate;
 import com.plannerAce.Models.Feedback;
 import com.plannerAce.Models.Interview;
 import com.plannerAce.Models.Interviewer;
+import com.plannerAce.Payload.Request.FeedbackRequest;
 import com.plannerAce.Repositories.CandidateRepository;
 import com.plannerAce.Repositories.FeedbackRepository;
 import com.plannerAce.Repositories.InterviewRepository;
@@ -36,29 +37,26 @@ public class FeedbackServiceImpl implements FeedbackService {
 	private CandidateRepository candidateRepository;
 
 	@Override
-	public Feedback addFeedback(Long interviewId, Long interviewerId, Long candidateId, String comments, int rating)
+	public Feedback addFeedback(Long InterviewId, Long interviewerId, FeedbackRequest feedbackRequest)
 			throws InterviewNotFoundException, InterviewerNotFoundException, CandidateNotFoundException {
-		Interview interview = interviewRepository.findById(interviewId)
+		Interview interview = interviewRepository.findById(InterviewId)
 				.orElseThrow(() -> new InterviewNotFoundException("Interview not found"));
 
 		Interviewer interviewer = interviewerRepository.findById(interviewerId)
 				.orElseThrow(() -> new InterviewerNotFoundException("Interviewer not found"));
 
-		Candidate candidate = candidateRepository.findById(candidateId)
-				.orElseThrow(() -> new CandidateNotFoundException("Candidate not found"));
-
 		Feedback feedback = new Feedback();
 		feedback.setInterview(interview);
 		feedback.setInterviewer(interviewer);
-		feedback.setCandidate(candidate);
-		feedback.setComments(comments);
-		feedback.setRating(rating);
+		feedback.setCandidate(interview.getCandidate());
+		feedback.setComments(feedbackRequest.getComments());
+		feedback.setRating(feedbackRequest.getRating());
 
 		return feedbackRepository.save(feedback);
 	}
 
 	@Override
-	public List<Feedback> getFeedbackByInterviewId(Long interviewId) throws InterviewNotFoundException {
+	public Feedback getFeedbackByInterviewId(Long interviewId) throws InterviewNotFoundException {
 		Interview interview = interviewRepository.findById(interviewId)
 				.orElseThrow(() -> new InterviewNotFoundException("Interview not found"));
 

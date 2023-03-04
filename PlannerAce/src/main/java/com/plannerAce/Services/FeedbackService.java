@@ -6,12 +6,13 @@ import com.plannerAce.Exceptions.CandidateNotFoundException;
 import com.plannerAce.Exceptions.InterviewNotFoundException;
 import com.plannerAce.Exceptions.InterviewerNotFoundException;
 import com.plannerAce.Models.Feedback;
+import com.plannerAce.Payload.Request.FeedbackRequest;
 
 public interface FeedbackService {
-	Feedback addFeedback(Long interviewId, Long interviewerId, Long candidateId, String comments, int rating)
+	Feedback addFeedback(Long InterviewId, Long interviewerId, FeedbackRequest feedbackRequest)
 			throws InterviewNotFoundException, InterviewerNotFoundException, CandidateNotFoundException;
 
-	List<Feedback> getFeedbackByInterviewId(Long interviewId) throws InterviewNotFoundException;
+	Feedback getFeedbackByInterviewId(Long interviewId) throws InterviewNotFoundException;
 
 	List<Feedback> getFeedbackByInterviewerId(Long interviewerId) throws InterviewerNotFoundException;
 

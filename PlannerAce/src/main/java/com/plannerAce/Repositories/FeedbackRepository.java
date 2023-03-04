@@ -11,7 +11,7 @@ import com.plannerAce.Models.Interviewer;
 
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
-	List<Feedback> findByInterview(Interview interview);
+	Feedback findByInterview(Interview interview);
 
 	List<Feedback> findByInterviewer(Interviewer interviewer);
 

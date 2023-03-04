@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.plannerAce.Enums.InterviewStatus;
 import com.plannerAce.Exceptions.CandidateNotFoundException;
+import com.plannerAce.Exceptions.InterviewNotFoundException;
 import com.plannerAce.Models.Candidate;
+import com.plannerAce.Models.Feedback;
 import com.plannerAce.Models.Interview;
 import com.plannerAce.Payload.Request.CandidateRequest;
 import com.plannerAce.Payload.Response.CandidateResponse;
 import com.plannerAce.Services.CandidateService;
+import com.plannerAce.Services.FeedbackService;
 import com.plannerAce.Services.InterviewService;
 
 @RestController("/candidates")
@@ -27,10 +30,13 @@ public class CandidateController {
 
 	private CandidateService candidateService;
 	private InterviewService interviewService;
+	private FeedbackService feedbackService;
 
-	public CandidateController(CandidateService candidateService, InterviewService interviewService) {
+	public CandidateController(CandidateService candidateService, InterviewService interviewService,
+			FeedbackService feedbackService) {
 		this.candidateService = candidateService;
 		this.interviewService = interviewService;
+		this.feedbackService = feedbackService;
 	}
 
 	@PostMapping("/add")
@@ -91,4 +97,19 @@ public class CandidateController {
 		return new ResponseEntity<List<Interview>>(allInterviews, HttpStatus.OK);
 	}
 
+
+	@GetMapping("/interviews/{interviewId}")
+	// TODO add a checking for the interview is of the cadidate requesting.
+	public ResponseEntity<Interview> getInterviewById(@PathVariable Long interviewId)
+			throws InterviewNotFoundException {
+		Interview interview = interviewService.getInterviewById(interviewId);
+		return new ResponseEntity<Interview>(interview, HttpStatus.OK);
+	}
+
+	@GetMapping("/interview/feedback/{interviewerId}")
+	public ResponseEntity<Feedback> getFeedbackByInterviewId(@PathVariable Long interviewerId)
+			throws InterviewNotFoundException {
+		Feedback feedback = feedbackService.getFeedbackByInterviewId(interviewerId);
+		return new ResponseEntity<Feedback>(feedback, HttpStatus.OK);
+	}
 }

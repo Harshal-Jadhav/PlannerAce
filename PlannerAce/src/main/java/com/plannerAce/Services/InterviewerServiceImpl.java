@@ -39,6 +39,7 @@ public class InterviewerServiceImpl implements InterviewerService {
 		interviewer.setName(interviewerDetails.getName());
 		interviewer.setEmail(interviewerDetails.getEmail());
 		interviewer.setPhoneNumber(interviewerDetails.getPhoneNumber());
+		interviewer.setPassword(interviewerDetails.getPassword());
 
 		return interviewerRepository.save(interviewer);
 	}
