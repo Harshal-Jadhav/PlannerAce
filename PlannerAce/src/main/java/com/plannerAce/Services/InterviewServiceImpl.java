@@ -5,14 +5,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.plannerAce.Enums.InterviewStatus;
+import com.plannerAce.Exceptions.CandidateNotFoundException;
 import com.plannerAce.Exceptions.InterviewNotFoundException;
 import com.plannerAce.Exceptions.InterviewScheduleConflictException;
+import com.plannerAce.Exceptions.InterviewerNotFoundException;
 import com.plannerAce.Models.Candidate;
 import com.plannerAce.Models.Interview;
 import com.plannerAce.Models.Interviewer;
+import com.plannerAce.Payload.Request.NewInterviewRequest;
 import com.plannerAce.Repositories.CandidateRepository;
 import com.plannerAce.Repositories.InterviewRepository;
 import com.plannerAce.Repositories.InterviewerRepository;
@@ -28,6 +33,9 @@ public class InterviewServiceImpl implements InterviewService {
 
 	@Autowired
 	private InterviewerRepository interviewerRepository;
+
+	@Autowired
+	private ModelMapper mapper;
 
 	@Override
 	public List<Interview> getAllInterviews() {
@@ -58,7 +66,27 @@ public class InterviewServiceImpl implements InterviewService {
 	}
 
 	@Override
-	public Interview scheduleInterview(Interview interview) throws InterviewScheduleConflictException {
+	public Interview scheduleInterview(NewInterviewRequest interviewRequest)
+			throws InterviewScheduleConflictException, CandidateNotFoundException, InterviewerNotFoundException {
+
+		Interview interview =  new Interview();
+		interview.setComments(interviewRequest.getComments());
+		interview.setStartTime(interviewRequest.getStartTime());
+		interview.setEndTime(interviewRequest.getEndTime());
+		interview.setLocation(interviewRequest.getLocation());
+		interview.setStatus(InterviewStatus.SCHEDULED);
+
+		Candidate candidate = candidateRepository.findById(interviewRequest.getCandidiateId())
+				.orElseThrow(() -> new CandidateNotFoundException(
+						"Candidate not found with Id " + interviewRequest.getCandidiateId()));
+
+		Interviewer interviewer = interviewerRepository.findById(interviewRequest.getInterviewerId())
+				.orElseThrow(() -> new InterviewerNotFoundException(
+						"Interviewer Not found with Id " + interviewRequest.getInterviewerId()));
+
+		interview.setCandidate(candidate);
+		interview.setInterviewer(interviewer);
+
 		LocalDateTime interviewStartTime = interview.getStartTime();
 		LocalDateTime interviewEndTime = interview.getEndTime();
 

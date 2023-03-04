@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plannerAce.Enums.InterviewStatus;
@@ -25,7 +26,8 @@ import com.plannerAce.Services.CandidateService;
 import com.plannerAce.Services.FeedbackService;
 import com.plannerAce.Services.InterviewService;
 
-@RestController("/candidates")
+@RestController
+@RequestMapping("/planner-ace/candidates")
 public class CandidateController {
 
 	private CandidateService candidateService;
@@ -48,7 +50,7 @@ public class CandidateController {
 		return new ResponseEntity<CandidateResponse>(candidateResponse, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/{candidate_id}")
+	@GetMapping("/get/{candidate_id}")
 	public ResponseEntity<CandidateResponse> getCandidateById(@PathVariable("candidate_id") Long candidateId)
 			throws CandidateNotFoundException {
 		Candidate candidate = candidateService.getCandidateById(candidateId);
@@ -57,7 +59,7 @@ public class CandidateController {
 		return new ResponseEntity<CandidateResponse>(candidateResponse, HttpStatus.OK);
 	}
 
-	@PutMapping("{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<CandidateResponse> updateCandidateProfile(@PathVariable("id") Long candidateId,
 			@RequestBody Candidate candidate) throws CandidateNotFoundException {
 		Candidate updatedCandidate = candidateService.updateCandidate(candidateId, candidate);
@@ -112,4 +114,5 @@ public class CandidateController {
 		Feedback feedback = feedbackService.getFeedbackByInterviewId(interviewerId);
 		return new ResponseEntity<Feedback>(feedback, HttpStatus.OK);
 	}
+
 }

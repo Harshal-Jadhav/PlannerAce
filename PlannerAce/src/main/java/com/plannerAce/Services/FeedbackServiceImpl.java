@@ -2,6 +2,8 @@ package com.plannerAce.Services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import com.plannerAce.Repositories.FeedbackRepository;
 import com.plannerAce.Repositories.InterviewRepository;
 import com.plannerAce.Repositories.InterviewerRepository;
 
-import jakarta.transaction.Transactional;
+
 
 @Service
 @Transactional

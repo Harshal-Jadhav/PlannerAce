@@ -1,5 +1,8 @@
 package com.plannerAce.Controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plannerAce.Exceptions.CandidateNotFoundException;
@@ -24,7 +28,8 @@ import com.plannerAce.Services.FeedbackService;
 import com.plannerAce.Services.InterviewService;
 import com.plannerAce.Services.InterviewerService;
 
-@RestController("/interviewer")
+@RestController
+@RequestMapping("/planner-ace/interviewer")
 public class InterviewerController {
 
 	private InterviewerService interviewerService;
@@ -81,11 +86,23 @@ public class InterviewerController {
 		return new ResponseEntity<Feedback>(feedback, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/interviews/{interviewId}")
+	@GetMapping("/get/interviews/{interviewId}")
 	// TODO add a checking for the interview is of the interviewer requesting.
 	public ResponseEntity<Interview> getInterviewById(@PathVariable Long interviewId)
 			throws InterviewNotFoundException {
 		Interview interview = interviewService.getInterviewById(interviewId);
 		return new ResponseEntity<Interview>(interview, HttpStatus.OK);
+	}
+
+	@GetMapping("/{interviewerId}/interviews/{interviewStatus}")
+	public ResponseEntity<List<Interview>> getAllInterviews(@PathVariable Long interviewerId,
+			@PathVariable String interviewStatus) {
+
+		List<Interview> interviews = interviewService.getInterviewsByInterviewerId(interviewerId).stream()
+				.filter(i -> i.getStatus().toString().equals(interviewStatus.toUpperCase()))
+				.collect(Collectors.toList());
+
+		return new ResponseEntity<List<Interview>>(interviews, HttpStatus.OK);
+
 	}
 }
