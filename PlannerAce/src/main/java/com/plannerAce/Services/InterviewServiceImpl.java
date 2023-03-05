@@ -5,8 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.plannerAce.Enums.InterviewStatus;
@@ -35,7 +36,7 @@ public class InterviewServiceImpl implements InterviewService {
 	private InterviewerRepository interviewerRepository;
 
 	@Autowired
-	private ModelMapper mapper;
+	private JavaMailSender javaMailSender;
 
 	@Override
 	public List<Interview> getAllInterviews() {
@@ -96,10 +97,37 @@ public class InterviewServiceImpl implements InterviewService {
 		conflictingInterviews.addAll(interviewRepository.findByCandidateAndStartTimeBetween(interview.getCandidate(),
 				interviewStartTime, interviewEndTime));
 
-		if (conflictingInterviews.isEmpty())
-			return interviewRepository.save(interview);
-		else
+		if (!conflictingInterviews.isEmpty())
 			throw new InterviewScheduleConflictException("Interview schedule conflict detected");
+
+
+		sendMail(candidate, interviewer, interview);
+
+		return interviewRepository.save(interview);
+	}
+
+	public void sendMail(Candidate candidate, Interviewer interviewer, Interview interview) {
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setFrom("harshaljadhav6444@gmail.com");
+		mailMessage.setTo(candidate.getEmail());
+		mailMessage.setCc(interviewer.getEmail());
+		String Subject = "Congrats! Interview Scheduled";
+		String message = "Hello " + candidate.getName() + ",\n"
+				+ "We hope this message finds you well.\n"
+				+ "We are happy to let you know that your interview is been scheduled.\n"
+				+ "Please find the interview details below\n"
+				+ "StartTime:- "+interview.getStartTime()+".\n"
+				+ "EndTime:- " + interview.getEndTime() + ".\n"
+				+ "Location:- "+interview.getLocation()+".\n"
+				+ "Addidtional info:- " + interview.getComments()+".\n"
+				+ "\n\n" + ""
+				+ "Regards,\n"
+				+ "Team PlannerAce.";
+
+		mailMessage.setSubject(Subject);
+		mailMessage.setText(message);
+
+		javaMailSender.send(mailMessage);
 	}
 
 
